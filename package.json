@@ -1,0 +1,24 @@
+{
+  "name": "volume-sync-worker-aws",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/worker.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daleewald/volume-sync-worker-aws.git"
+  },
+  "author": "Dale Ewald <dale.ewald@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daleewald/volume-sync-worker-aws/issues"
+  },
+  "homepage": "https://github.com/daleewald/volume-sync-worker-aws#readme",
+  "dependencies": {
+    "aws-sdk": "^2.514.0",
+    "bee-queue": "^1.2.2",
+    "redis": "^2.8.0"
+  }
+}
