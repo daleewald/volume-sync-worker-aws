@@ -4,7 +4,8 @@
   "description": "",
   "main": "app/worker.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node app/worker.js"
   },
   "repository": {
     "type": "git",

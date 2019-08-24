@@ -4,17 +4,19 @@ const AWSUtility = require('./aws-utility');
 
 const REGION = process.env.REGION;
 
-console.log('Setup Queue');
-const eq = new Queue('AWS-INVENTORY-EVENTS', {
+let queueName = 'AWS-INVENTORY-EVENTS';
+console.log('Open Queue', queueName);
+const eq = new Queue(queueName, {
     redis: {
         host: 'redis'
     }
 });
 
+// redis client for general cache support
 const rclient = redis.createClient( { host: 'redis' });
 
 eq.on('ready', () => {
-    console.log('AWS Queue worker ready');
+    console.log('AWS Queue Worker ready');
 
     eq.process((job, done) => {
         const evt = job.data.event;
