@@ -38,7 +38,7 @@ class AWSUtility {
         let result;
 
         await this.s3.upload(uploadParams).promise().then( ( data ) => {
-            result = {result: 'Uploaded', file: data.Location, etag: data.ETag};
+            result = {result: 'Uploaded', file: data.Key, etag: data.ETag};
         }).catch( ( err ) => {
             throw err;
         });
