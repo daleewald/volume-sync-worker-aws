@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
+const logger = require('./logger');
 
 class AWSUtility {
     s3;
@@ -25,7 +26,7 @@ class AWSUtility {
     }
 
     async upload( sourcepath, targetpath, params ) {
-        console.log('Beginning upload:', targetpath);
+        logger.debug('Beginning upload:', targetpath, params);
         let uploadParams = params || {};
         const file = fs.createReadStream(sourcepath);
         if (uploadParams.Bucket === undefined) {

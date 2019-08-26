@@ -1,11 +1,12 @@
 const redis = require('redis');
 const Queue = require('bee-queue');
+const logger = require('./logger');
 const AWSUtility = require('./aws-utility');
 
 const REGION = process.env.REGION;
 
 let queueName = 'AWS-INVENTORY-EVENTS';
-console.log('Open Queue', queueName);
+logger.info('Open Queue', queueName);
 const eq = new Queue(queueName, {
     redis: {
         host: 'redis'
@@ -16,11 +17,11 @@ const eq = new Queue(queueName, {
 const rclient = redis.createClient( { host: 'redis' });
 
 eq.on('ready', () => {
-    console.log('AWS Queue Worker ready');
+    logger.info('AWS Queue Worker ready');
 
     eq.process((job, done) => {
         const evt = job.data.event;
-        console.log('Handling', evt);
+        logger.debug('Handling', evt);
         
         if (evt === 'addDir' || evt === 'removeDir') {
             done( null, 'Nothing to do.');
@@ -30,13 +31,12 @@ eq.on('ready', () => {
 
             if (evt === 'inventory') {
                 awsUtility.inventory(job.data.projection).then( ( result ) => {
-                    const cacheKey = [bucketName,'inventory'].join('::');
-                    console.log('Cache inventory; key =', cacheKey);
+                    const cacheKey = [queueName, bucketName,'inventory'].join(':');
+                    logger.info('Cache inventory; key =', cacheKey);
                     rclient.set(cacheKey, JSON.stringify( result ), ( err, reply ) => {
                         if ( err ) {
-                            console.log('ERROR', err);
+                            logger.error('ERROR', err);
                         } else {
-                            console.log( reply );
                             done( null, cacheKey );
                         }
                     });
@@ -61,5 +61,5 @@ eq.on('ready', () => {
 });
 
 eq.on('error', (err) => {
-    console.log('Queue error: ', err.message);
+    logger.error(queueName,' error: ', err.message);
 });
