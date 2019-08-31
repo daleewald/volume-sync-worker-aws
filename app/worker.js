@@ -16,6 +16,22 @@ const eq = new Queue(queueName, {
 // redis client for general cache support
 const rclient = redis.createClient( { host: 'redis' });
 
+
+const subClient = rclient.duplicate();
+const CHNL_CONTAINER_LOG_LEVEL = 'CONTAINER-LOG-LEVEL';
+
+subClient.on("message", ( channel, message ) => {
+    switch (channel) {
+        case CHNL_CONTAINER_LOG_LEVEL:
+            // should have been validated before being queued
+            logger.level = message;
+            break;
+        default:
+    }
+});
+subClient.subscribe(CHNL_CONTAINER_LOG_LEVEL);
+
+
 eq.on('ready', () => {
     logger.info('AWS Queue Worker ready');
 
