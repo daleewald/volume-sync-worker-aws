@@ -24,6 +24,7 @@ subClient.on("message", ( channel, message ) => {
     switch (channel) {
         case CHNL_CONTAINER_LOG_LEVEL:
             // should have been validated before being queued
+            logger.info('',channel,'received message',message);
             logger.level = message;
             break;
         default:
