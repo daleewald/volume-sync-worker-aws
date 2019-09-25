@@ -3,7 +3,7 @@ const Queue = require('bee-queue');
 const logger = require('./logger');
 const AWSUtility = require('./aws-utility');
 
-const REGION = process.env.REGION;
+const DEFAULT_REGION = process.env.REGION;
 
 let queueName = 'AWS-INVENTORY-EVENTS';
 logger.info('Open Queue', queueName);
@@ -44,7 +44,7 @@ eq.on('ready', () => {
             done( null, 'Nothing to do.');
         } else {
             const bucketName = job.data.targetBucket;
-            const awsUtility = new AWSUtility( REGION, bucketName );
+            const awsUtility = new AWSUtility( job.data.region || DEFAULT_REGION, bucketName );
 
             if (evt === 'inventory') {
                 awsUtility.inventory(job.data.projection).then( ( result ) => {
